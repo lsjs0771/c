@@ -1,0 +1,26 @@
+#include <stdio.h>
+#include <string.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <sys/stat.h>
+
+int echo(void){
+
+    puts("hello world");
+    return 0;
+}
+  int (*hs)(void)=NULL;
+
+  int wz(int (*p)()){
+      p();
+  }
+
+
+int main(){
+
+      int (*hs)()=echo;
+      hs();
+
+      wz(hs);
+    return 0;
+}

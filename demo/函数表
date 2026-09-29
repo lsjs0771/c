@@ -1,0 +1,36 @@
+#include <stdio.h>
+#include <string.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <sys/stat.h>
+
+int  cs1(void){
+
+    puts("hello world");
+    return 0;
+}
+int  cs2(void){
+
+    puts("hello nn");
+    return 0;
+}
+
+struct  ops{
+     int (*hs1)(void);
+     int (*hs2)(void);
+};
+
+int main(){
+
+   struct ops wz={
+      .hs1=cs1,
+      .hs2=cs2,
+   };
+
+   struct ops*p=&wz;
+   p->hs1();
+   p->hs2();
+
+
+    return 0;
+}

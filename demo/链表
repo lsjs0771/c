@@ -1,0 +1,41 @@
+#include <stdio.h>
+#include <string.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <sys/stat.h>
+
+ typedef struct link  LK;
+
+   struct  link
+   {
+   int        n;
+   char       data[20];
+   LK*      link_offs;
+  };
+
+
+int main(){
+
+    int n=0;
+
+    LK lk1={n,"1213232",NULL};
+
+    n++;
+     LK lk2={n,"wqwqwq",NULL};
+
+    lk1.link_offs=&lk2;
+    n++;
+     LK lk3={n,"aaaaaa",NULL};
+     lk2.link_offs=&lk3;
+
+     LK *p=&lk1;
+
+     for(int k=0;k<3;k++){
+         printf("%d\n",p->n);
+         p=p->link_offs;
+     }
+
+
+
+    return 0;
+}

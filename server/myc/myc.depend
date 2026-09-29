@@ -1,0 +1,113 @@
+# depslib dependency file v1.0
+1788754611 source:/home/wz/c/myc/connect_sock.c
+	"connect_sock.h"
+
+1789169543 /home/wz/c/myc/connect_sock.h
+	<sys/socket.h>
+	<netinet/in.h>
+	<arpa/inet.h>
+	<stdio.h>
+	<string.h>
+	<ctype.h>
+	<stdlib.h>
+	<sys/wait.h>
+	<sys/stat.h>
+	<errno.h>
+	<string.h>
+	<unistd.h>
+	<sys/types.h>
+	<unistd.h>
+	<stdbool.h>
+	<netinet/in.h>
+	<sys/time.h>
+
+1789210128 source:/home/wz/c/myc/recv_data.c
+	"recv_data.h"
+	<errno.h>
+	<stdlib.h>
+	<string.h>
+	<sys/socket.h>
+	<unistd.h>
+	<stdint.h>
+	<arpa/inet.h>
+
+1789515429 /home/wz/c/myc/recv_data.h
+	<sys/socket.h>
+	<netinet/in.h>
+	<arpa/inet.h>
+	<stdio.h>
+	<string.h>
+	<ctype.h>
+	<stdlib.h>
+	<sys/wait.h>
+	<sys/stat.h>
+	<errno.h>
+	<string.h>
+	<unistd.h>
+	<sys/types.h>
+	<unistd.h>
+	<stdbool.h>
+	<netinet/in.h>
+	<sys/time.h>
+
+1788755294 source:/home/wz/c/myc/send_data.c
+	"send_data.h"
+	<errno.h>
+
+1790082075 /home/wz/c/myc/send_data.h
+	<sys/socket.h>
+	<netinet/in.h>
+	<arpa/inet.h>
+	<stdio.h>
+	<string.h>
+	<ctype.h>
+	<stdlib.h>
+	<sys/wait.h>
+	<sys/stat.h>
+	<errno.h>
+	<string.h>
+	<unistd.h>
+	<sys/types.h>
+	<unistd.h>
+	<stdbool.h>
+	<netinet/in.h>
+	<sys/time.h>
+	<stdbool.h>
+	<sys/types.h>
+	<errno.h>
+
+1789210554 source:/home/wz/c/myc/server.c
+	"connect_sock.h"
+	"recv_data.h"
+	"send_data.h"
+	"write_data.h"
+
+1788755499 /home/wz/c/myc/write_data.h
+	<sys/socket.h>
+	<netinet/in.h>
+	<arpa/inet.h>
+	<stdio.h>
+	<string.h>
+	<ctype.h>
+	<stdlib.h>
+	<sys/wait.h>
+	<sys/stat.h>
+	<errno.h>
+	<string.h>
+	<unistd.h>
+	<sys/types.h>
+	<unistd.h>
+	<stdbool.h>
+	<netinet/in.h>
+	<sys/time.h>
+
+1788755735 source:/home/wz/c/myc/write_data.c
+	"write_data.h"
+	"connect_sock.h"
+	"send_data.h"
+
+1789542598 source:/home/wz/c/demo/read_file_len.c
+	<stdio.h>
+	<sys/stat.h>
+	"/home/wz/c/myc/recv_data.h"
+

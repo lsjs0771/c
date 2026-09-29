@@ -1,0 +1,102 @@
+gcc server.c  connect_sock.c  recv_data.c send_data.c write_data.c  -o 1
+sudo lsof -i :8000
+
+
+//==============================================================
+#include <stdbool.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <sys/time.h>
+
+
+typedef enum {
+    SOCK_STATE_UNINIT = 0,   // 未初始化
+    SOCK_STATE_CONNECTED,    // 已连接
+    SOCK_STATE_CLOSED,       // 已关闭（主动或被动）
+    SOCK_STATE_ERROR         // 发生致命错误
+} sock_state_t;
+//---------------------------------------------------
+
+// 完善的连接上下文结构体
+typedef struct {
+    // ---------- 1. 核心句柄 ----------
+    sock_handle_t          fd;                // 套接字描述符（兼容 Linux/Windows）
+    
+    // ---------- 2. 对端身份（支持 IPv4/IPv6） ----------
+    struct sockaddr_storage             peer_addr; // 对端 IP 和端口
+                             socklen_t                 peer_addr_len;           // 地址实际长度
+    
+    // ---------- 3. 运行状态 ----------
+    sock_state_t                    state;                // 当前连接状态（比 int isover 语义强）
+                    bool                    is_nonblocking;              // 是否设置为非阻塞模式
+    
+    // ---------- 4. 超时配置（收发保护） ----------
+    struct timeval               send_timeout;      // 发送超时（默认 3s）
+    struct timeval               recv_timeout;      // 接收超时（默认 3s）
+    
+    // ---------- 5. 错误快照（防止 errno 丢失） ----------
+    int                 last_errno;                   // 最近一次系统调用错误码
+    char             last_error_msg[64];          // 可选的错误描述（方便打印日志）
+    
+    // ---------- 6. 用户私有数据指针（扩展用） ----------
+    void       *user_data;                  // 可以挂载你之前写的 recv_type 结构体
+} connect_sock_t;
+
+
+//========================================================================
+
+typedef struct {
+    // ---------- 固定配置（只读） ----------
+    size_t     total_len;        // 要接收文件总字节数
+    char       *buffer_start;    // 指向 malloc 申请的内存起始地址（用于 free）
+    size_t      buffer_max_size;  // 实际分配的最大内存（防止越界）
+
+    // ---------- 动态状态（每次更新） ----------
+    size_t      received_total;   // 已经累计接收的字节数（核心！）
+    size_t       curr_recv_len;    // 本次调用 recv 返回的字节数（即你原来的 len）
+    int             recv_retval;      // 保存 recv() 原始返回值（用于判断 -1 错误或 0 断开）
+    
+    // ---------- 标志位 ----------
+    bool        is_over;          // 是否文件传输完成（true/false）
+    bool       is_error;         // 是否发生网络异常
+} recv_context_t;
+
+
+//=========================================================================
+#include <stdbool.h>
+#include <pthread.h>
+#include <sys/types.h>
+
+// ---------- 1. 定义一个“数据碎片节点”（按文件偏移量排序）----------
+typedef struct file_fragment {
+    off_t           offset;          // 该碎片在文件中的起始位置（支持超大文件）
+    size_t          length;          // 该碎片的长度
+    char            *data;           // 指向实际接收到的二进制数据
+    struct file_fragment *next;      // 链表指针（按 offset 从小到大排列）
+} file_fragment_t;
+
+// ---------- 2. 文件拼接上下文（完美版）----------
+typedef struct {
+    // ----- A. 文件元信息（只读） -----
+    char            file_path[256];   // 最终拼接完成后的存放路径
+    size_t          total_size;       // 文件总字节数（从协议头获取）
+    unsigned int    expected_crc32;   // 预期的 CRC32 校验值（用于最后验证）
+
+    // ----- B. 磁盘 I/O 句柄 -----
+    int             fd;               // 最终目标文件的文件描述符（open 后持有）
+    off_t           flushed_offset;   // 已经安全写入磁盘的连续最大偏移量（落盘水位线）
+
+    // ----- C. 乱序重组核心（内存管理）-----
+    file_fragment_t *frag_head;       // 按 offset 排序的碎片链表头（有序插入）
+    size_t          cached_bytes;     // 当前链表中缓存的总字节数（用于判断是否够大）
+
+    // ----- D. 落盘策略配置（性能调优）-----
+    size_t          flush_threshold;  // 缓存超过此阈值（如 1MB）才触发 write() 落盘
+    char            *merge_buffer;    // 合并写入时的临时缓冲区（避免频繁小 I/O）
+
+    // ----- E. 状态与同步（线程安全）-----
+    bool            is_completed;     // 是否所有碎片已收齐且校验通过
+    int             last_errno;       // 最近一次磁盘或内存错误码
+    pthread_mutex_t lock;             // 多线程操作链表时的互斥锁
+} file_assembler_t;
+

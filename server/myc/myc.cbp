@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="myc" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/myc" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/myc" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+		</Compiler>
+		<Unit filename="connect_sock.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="connect_sock.h" />
+		<Unit filename="del_data.c">
+			<Option compilerVar="CC" />
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="dir_data.c">
+			<Option compilerVar="CC" />
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="myc.cbp" />
+		<Unit filename="read_file.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="read_file.h">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="recv_data.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="recv_data.h" />
+		<Unit filename="send_data.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="send_data.h" />
+		<Unit filename="server.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="struct.txt" />
+		<Unit filename="write_data.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="write_data.h" />
+		<Extensions />
+	</Project>
+</CodeBlocks_project_file>

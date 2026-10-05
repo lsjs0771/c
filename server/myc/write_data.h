@@ -21,7 +21,7 @@
 
 #include  "recv_data.h"
 
-#define  WRITE_PATH "/home/wz/c/data/"
+#define  WRITE_PATH "/home/wz/cs-c/pull/"
 
 typedef  enum{
         WRITE_STATE_IDLE=0,

@@ -23,7 +23,7 @@ typedef  enum{
 int main(void){
 
          int  port=8000;
-         char *ip="192.168.101.233";
+         char *ip="192.168.101.144";
 
 	     connect_sock_t  cns;
          fwqsocket(port,ip,&cns);
@@ -125,11 +125,11 @@ int main(void){
                               int   del_bz=remove(filename);
                               if(del_bz==0){
 
-                                       char    buff_dir[]="文件已删除";
+                                       char    buff_dir[]="Successfully: del  file";
                                        send_n(acp,buff_dir,strlen(buff_dir));
                              }else{
 
-                                      char    buff_dir1[]="文件删除错误";
+                                      char    buff_dir1[]="fail: del file";
                                        send_n(acp,buff_dir1,strlen(buff_dir1));
 
                                        puts("文件删除错误");

@@ -21,7 +21,7 @@
 
 #define  RECV_N    64*1024+10
 
-#define SERVER_PATH  "/home/wz/c/data/"
+#define SERVER_PATH  "/home/wz/cs-c/pull/"
 
 typedef  struct{     //数据包类型
           char   type;

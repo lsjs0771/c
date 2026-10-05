@@ -9,13 +9,6 @@
 
 int main()
 {
-     //==========socket===============================================================================
-
-     int port=8000;
-     char *ip="192.168.101.144";
-     int  sock=kfsocket(port,ip);
-
-     //============================================================================================
 
 //==============TUI 设置============================================================
     struct winsize ws;
@@ -83,8 +76,8 @@ int main()
     fflush(stdout);
  //-------------TUI各个node 显示内容-----------------------------------------------------------------------------
      char *buff1=realloc(0,node1.height*node1.width);
-     char *buff2=realloc(0,node2.height*node2.width);
-     char *buff3=realloc(0,node3.height*node3.width);
+    char *buff2=realloc(0,node2.height*node2.width);
+    char *buff3=realloc(0,node3.height*node3.width);
      char *buff4=realloc(0,node4.height*node4.width);
      char *buff5=realloc(0,node5.height*node4.width);
 
@@ -92,46 +85,66 @@ int main()
     strcpy(buff2,"client");
     strcpy(buff3,"server");
     strcpy(buff4,"input:");
-    strcpy(buff5,"output:");
+     strcpy(buff5,"output:");
 
   //------------循环显示TUI每个node-----------------------------------------------------------------------------------------
-     int len=0;
+    int len=0;
+
+     node1.node_buff=buff1;   //显示标题node
+     write_node(&node1);
+
+     node5.node_buff=buff5;    //显示输出框
 
      node2.isbuff=1;
      node3.isbuff=1;
 
-     node1.node_buff=buff1;
-     node2.node_buff=buff2;
-     node3.node_buff=buff3;
-     node4.node_buff=buff4;
-     node5.node_buff=buff5;    //显示输出框
+     //==========socket===============================================================================
+//======socket=====================================================================
+     int port=8000;
+     char *ip="192.168.101.233";
+     int  sock=kfsocket(port,ip);
 
-     echo_node(&node1);       //显示标题node
-     echo_node(&node2);
-     echo_node(&node3);
-     echo_node(&node4);
-     echo_node(&node5);
-     //---------判断服务器状态----------------------------------------------------------
-       if(sock==-1){
+     if(sock==-1){
     //      memset(node5.node_buff,0,node5.buff_len);
-          strcpy(node5.node_buff,"Cannot connect to the server,Exit in 2 seconds ");
-          echo_node(&node5);
-          sleep(2);
-          return 0;
+          strcpy(node5.node_buff,"server no line");
      }else{
 
    //         memset(node5.node_buff,0,node5.buff_len);
-           strcpy(node5.node_buff,"connect to server");
-           echo_node(&node5);
+           strcpy(node5.node_buff,"connect server");
      }
-     //========循环键盘输入，接收。发送================================
-    node5.isbuff=0;
+        data_type_t  dtt;
+        dtt.type='m';                               //设置为命令模式
+        strcpy(dtt.ls,"12345678");                        //此9个字节为保留，现在不用
+
+        char *ls_ml=malloc(10+file_int_len);     //拼接请求类型和请求数据，m代表命令
+        memcpy(ls_ml,&dtt,10);
+        memcpy(ls_ml+10,file_in,file_int_len);
+
+
+     //============================================================================================
+
 
     while(1){
 
-//----------输入--------------------------------------------------------------------
+        node2.node_buff=buff2;
+        if(node2.isbuff==1){              //只显示一次
+            write_node(&node2);
+            memset(node2.node_buff,0,node2.buff_len);
+        }
+        node3.node_buff=buff3;
+        if(node3.isbuff==1){             //只显示一次
+             write_node(&node3);
+             memset(node3.node_buff,0,node3.buff_len);
+        }
+
+         node4.node_buff=buff4;    //显示输入框
+         write_node(&node4);
 
 
+         write_node(&node5);
+
+
+//----------输入---------------------------------------------------------------------
         keyboad(node4.node_buff,&len,&node4);
 
         if(strcmp(node4.node_buff,"exit")==0){     //退出程序
@@ -139,60 +152,43 @@ int main()
         }
 
         if(strcmp(node4.node_buff,"dirc")==0){    //显示本地pull目录
-          //      memset(node4.node_buff,0,node4.buff_len);  //清空输入 buff
-                 clear(&node2);
+                node2.isbuff=1;                    //client node 可写
+                memset(node4.node_buff,0,node4.buff_len);  //清空输入 buff
 
-                memset(node2.node_buff,0,node2.buff_len);
-                int bz=read_drient_echobuff(PULL_PATH,&node2);     //显示本地目录
-                echo_left_txt(&node2);
-
+                int bz=echo_drient(PULL_PATH,&node2);
                 if(bz==0){
+                     node2.isbuff=1;
                      memset(node5.node_buff,0,node5.buff_len);
-                     strcpy(node5.node_buff,"Successfully: displayed the local directory.");
-                     echo_node(&node5);
+                     strcpy(node5.node_buff,"dirc ok");
                 }else{
                      memset(node5.node_buff,0,node5.buff_len);
-                     strcpy(node5.node_buff,"Failed:  display the local directory");
-                     echo_node(&node5);
+                     strcpy(node5.node_buff,"dirc no ok");
+
                 }
                 continue;
         }
 
         if(strcmp(node4.node_buff,"dir")==0){
-              clear(&node3);
-
-              int bz=read_server_dirent_buff(sock,&node4,&node3);         //显示服务器目录
-
-               memset(node5.node_buff,0,node5.buff_len);
-               strcpy(node5.node_buff,"Successfully:   displayed the server directory");
-               echo_node(&node5);
-
+               memset(node5.node_buff,0,node5.buff_len);    //显示没有这个功能
+               strcpy(node5.node_buff,"dir ok");
                continue;
         }
 
-        if(strspn(node4.node_buff,"pull")==4){
-
-              int bz=pull_server(sock,&node4,&node5,&node2);
-              if(bz==-1){                            //pull 没有输入文件名
-                  continue;
-              }
-              continue;
+        if(strcmp(node4.node_buff,"pull")==0){
+              memset(node5.node_buff,0,node5.buff_len);    //显示没有这个功能
+              strcpy(node5.node_buff,"pull ok");
+             continue;
         }
 
-        if(strspn(node4.node_buff,"push")==4){
-
-               int  bz=push_server(sock,&node4,&node5);
-
+        if(strcmp(node4.node_buff,"push")==0){
                memset(node5.node_buff,0,node5.buff_len);    //显示没有这个功能
-               strcpy(node5.node_buff,"Successfully:  uploaded the file to the server");
-               echo_node(&node5);
+               strcpy(node5.node_buff,"push ok");
               continue;
 
         }
 
          memset(node5.node_buff,0,node5.buff_len);    //显示没有这个功能
-         strcpy(node5.node_buff,"Command not supported");
-         echo_node(&node5);
+         strcpy(node5.node_buff," not supported ");
 
     //------------------------------------------------------------------
     }

@@ -148,11 +148,11 @@ int main()
 
                 if(bz==0){
                      memset(node5.node_buff,0,node5.buff_len);
-                     strcpy(node5.node_buff,"Successfully: displayed the local directory.");
+                     strcpy(node5.node_buff,"Successfully displayed the local directory.");
                      echo_node(&node5);
                 }else{
                      memset(node5.node_buff,0,node5.buff_len);
-                     strcpy(node5.node_buff,"Failed:  display the local directory");
+                     strcpy(node5.node_buff,"Failed to display the local directory");
                      echo_node(&node5);
                 }
                 continue;
@@ -164,7 +164,7 @@ int main()
               int bz=read_server_dirent_buff(sock,&node4,&node3);         //显示服务器目录
 
                memset(node5.node_buff,0,node5.buff_len);
-               strcpy(node5.node_buff,"Successfully:   displayed the server directory");
+               strcpy(node5.node_buff,"Successfully displayed the server directory");
                echo_node(&node5);
 
                continue;
@@ -179,12 +179,9 @@ int main()
               continue;
         }
 
-        if(strspn(node4.node_buff,"push")==4){
-
-               int  bz=push_server(sock,&node4,&node5);
-
+        if(strcmp(node4.node_buff,"push")==0){
                memset(node5.node_buff,0,node5.buff_len);    //显示没有这个功能
-               strcpy(node5.node_buff,"Successfully:  uploaded the file to the server");
+               strcpy(node5.node_buff,"Successfully uploaded the file to the server");
                echo_node(&node5);
               continue;
 

@@ -1,0 +1,59 @@
+# depslib dependency file v1.0
+1790329654 source:/home/wz/github/c/tui/my_tui/read_file.c
+	"read_file.h"
+
+1790248893 /home/wz/github/c/tui/my_tui/read_file.h
+	<sys/socket.h>
+	<netinet/in.h>
+	<arpa/inet.h>
+	<stdio.h>
+	<string.h>
+	<ctype.h>
+	<stdlib.h>
+	<sys/wait.h>
+	<sys/stat.h>
+	<errno.h>
+	<string.h>
+	<unistd.h>
+	<sys/types.h>
+	<unistd.h>
+
+1790250036 source:/home/wz/github/c/tui/my_tui/send_data.c
+	"send_data.h"
+	<errno.h>
+
+1790900177 /home/wz/github/c/tui/my_tui/send_data.h
+	<sys/socket.h>
+	<netinet/in.h>
+	<arpa/inet.h>
+	<stdio.h>
+	<string.h>
+	<ctype.h>
+	<stdlib.h>
+	<sys/wait.h>
+	<sys/stat.h>
+	<errno.h>
+	<string.h>
+	<unistd.h>
+	<sys/types.h>
+	<unistd.h>
+
+1789814066 source:/home/wz/github/c/tui/my_tui/write_data.c
+	"write_data.h"
+
+1789994617 /home/wz/github/c/tui/my_tui/write_data.h
+	<sys/socket.h>
+	<netinet/in.h>
+	<arpa/inet.h>
+	<stdio.h>
+	<string.h>
+	<ctype.h>
+	<stdlib.h>
+	<sys/wait.h>
+	<sys/stat.h>
+	<errno.h>
+	<string.h>
+	<unistd.h>
+	<sys/types.h>
+	<unistd.h>
+
